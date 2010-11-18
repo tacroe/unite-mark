@@ -5,25 +5,16 @@ if !exists('g:unite_source_mark_showall')
   let g:unite_source_mark_showall = 0
 endif
 
-function! s:str2list(str)
-  let l:max = strlen(a:str)
-  let l:i = 0
-  let l:list = []
-  while l:i < l:max
-    call add(l:list, a:str[i])
-    let l:i += 1
-  endwhile
-  return l:list
-endfunction
-
-let s:marks = s:str2list(
+let s:marks = split(
 \   "abcdefghijklmnopqrstuvwxyz"
+\ , '\zs'
 \ )
 
-let s:all_marks = s:str2list(
+let s:all_marks = split(
 \   "abcdefghijklmnopqrstuvwxyz"
 \ . "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 \ . "0123456789.'`^<>[]{}()\""
+\ , '\zs'
 \ )
 
 let s:source_mark = {
