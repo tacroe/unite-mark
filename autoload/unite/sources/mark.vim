@@ -6,14 +6,7 @@ if !exists('g:unite_source_mark_showall')
 endif
 
 function! s:str2list(str)
-  let l:max = strlen(a:str)
-  let l:i = 0
-  let l:list = []
-  while l:i < l:max
-    call add(l:list, a:str[i])
-    let l:i += 1
-  endwhile
-  return l:list
+    return split(a:str, '\zs')
 endfunction
 
 let s:marks = s:str2list(
