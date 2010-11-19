@@ -15,22 +15,7 @@ function! s:str2list(str)
     return split(a:str, '\zs')
 endfunction
 
-let s:marks = s:str2list(
-\   "abcdefghijklmnopqrstuvwxyz"
-\ )
-
-let s:all_marks = s:str2list(
-\   "abcdefghijklmnopqrstuvwxyz"
-\ . "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-\ . "0123456789.'`^<>[]{}()\""
-\ )
-
-function! s:str2list(str)
-    return split(a:str, '\zs')
-endfunction
-
 let s:marks = s:str2list(g:unite_source_mark_marks)
->>>>>>> f87e2f8a72d3cb8fd4006c50a2df0c272b19fc4a
 
 let s:source_mark = {
 \   'name': 'mark',
