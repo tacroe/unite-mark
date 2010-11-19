@@ -27,7 +27,7 @@ function! s:source_mark.gather_candidates(args, context)
   let l:candidates = []
   let l:marks = g:unite_source_mark_showall == 1 ? s:all_marks : s:marks
   let l:curr_buf_name = bufname('#')
-  execute 'buffer #'
+  buffer #
   for l:mark in l:marks
     let l:pos = getpos("'" . l:mark)
     let l:line = l:pos[1]
@@ -54,7 +54,7 @@ function! s:source_mark.gather_candidates(args, context)
     \ }
     call add(l:candidates, l:candidate)
   endfor
-  execute 'buffer #'
+  buffer #
   return l:candidates
 endfunction
 
