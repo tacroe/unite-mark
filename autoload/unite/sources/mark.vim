@@ -1,23 +1,22 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-if !exists('g:unite_source_mark_showall')
-  let g:unite_source_mark_showall = 0
+if !exists('g:unite_source_mark_marks')
+  let g:unite_source_mark_marks = "abcdefghijklmnopqrstuvwxyz"
+
+  " or all marks?
+  " let g:unite_source_mark_marks =
+  " \   "abcdefghijklmnopqrstuvwxyz"
+  " \ . "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  " \ . "0123456789.'`^<>[]{}()\""
 endif
+
 
 function! s:str2list(str)
     return split(a:str, '\zs')
 endfunction
 
-let s:marks = s:str2list(
-\   "abcdefghijklmnopqrstuvwxyz"
-\ )
-
-let s:all_marks = s:str2list(
-\   "abcdefghijklmnopqrstuvwxyz"
-\ . "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-\ . "0123456789.'`^<>[]{}()\""
-\ )
+let s:marks = s:str2list(g:unite_source_mark_marks)
 
 let s:source_mark = {
 \   'name': 'mark',
@@ -25,10 +24,9 @@ let s:source_mark = {
 
 function! s:source_mark.gather_candidates(args, context)
   let l:candidates = []
-  let l:marks = g:unite_source_mark_showall == 1 ? s:all_marks : s:marks
   let l:curr_buf_name = bufname('#')
   buffer #
-  for l:mark in l:marks
+  for l:mark in s:marks
     let l:pos = getpos("'" . l:mark)
     let l:line = l:pos[1]
     if l:line == 0 " mark does not exist
