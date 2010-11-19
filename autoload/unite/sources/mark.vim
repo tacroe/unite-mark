@@ -12,7 +12,7 @@ if !exists('g:unite_source_mark_marks')
 endif
 
 function! s:str2list(str)
-    return split(a:str, '\zs')
+  return split(a:str, '\zs')
 endfunction
 
 let s:marks = s:str2list(g:unite_source_mark_marks)
@@ -21,38 +21,57 @@ let s:source_mark = {
 \   'name': 'mark',
 \ }
 
+function! s:source_mark.on_init(args, context)
+  let s:mark_info_list = s:collect_mark_info()
+endfunction
+
 function! s:source_mark.gather_candidates(args, context)
-  let l:candidates = []
-  let l:curr_buf_name = bufname('#')
-  buffer #
+  return map(s:mark_info_list, '{
+        \   "word": v:val.mark . v:val.buf_name . v:val.snippet,
+        \   "abbr": printf("%s: %s [%4d] %s",
+        \                  v:val.mark, v:val.buf_name, v:val.line, v:val.snippet),
+        \   "source": "mark",
+        \   "kind": "jump_list",
+        \   "action__path": v:val.path,
+        \   "action__line": v:val.line,
+        \ }')
+endfunction
+
+function! s:collect_mark_info()
+  let l:curr_buf_name = bufname('%')
+  let l:mark_info_list = [] 
   for l:mark in s:marks
-    let l:pos = getpos("'" . l:mark)
-    let l:line = l:pos[1]
-    if l:line == 0 " mark does not exist
-      continue
+    let l:mark_info = s:get_mark_info(l:mark, l:curr_buf_name)
+    if !empty(l:mark_info)
+      call add(l:mark_info_list, l:mark_info)
     endif
-    if l:pos[0] == 0
-      let l:buf_name = '%'
-      let l:path = l:curr_buf_name
-      let l:snippet = getline(l:line)
-    else
-      let l:buf_name = bufname(l:pos[0])
-      let l:path = l:buf_name
-      let l:snippet = ''
-    endif
-    let l:candidate = {
-    \   'word': l:mark . l:buf_name . l:snippet,
-    \   'abbr': printf('%s: %s [%4d] %s',
-    \                  l:mark, l:buf_name, l:line, l:snippet),
-    \   'source': 'mark',
-    \   'kind': 'jump_list',
-    \   'action__path': l:path,
-    \   'action__line': l:line,
-    \ }
-    call add(l:candidates, l:candidate)
   endfor
-  buffer #
-  return l:candidates
+  return l:mark_info_list
+endfunction
+
+function! s:get_mark_info(mark, curr_buf_name)
+  let l:pos = getpos("'" . a:mark)
+  let l:line = l:pos[1]
+  if l:line == 0 " mark does not exist
+    return {}
+  endif
+  if l:pos[0] == 0
+    let l:buf_name = '%'
+    let l:path = a:curr_buf_name
+    let l:snippet = getline(l:line)
+  else
+    let l:buf_name = bufname(l:pos[0])
+    let l:path = l:buf_name
+    let l:snippet = ''
+  endif
+  let l:mark_info = {
+        \   'mark': a:mark,
+        \   'buf_name': l:buf_name,
+        \   'path': l:path,
+        \   'line': l:line,
+        \   'snippet': l:snippet,
+        \ } 
+  return l:mark_info
 endfunction
 
 function! unite#sources#mark#define()
@@ -61,4 +80,3 @@ endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
-
