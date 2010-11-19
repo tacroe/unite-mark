@@ -5,16 +5,18 @@ if !exists('g:unite_source_mark_showall')
   let g:unite_source_mark_showall = 0
 endif
 
-let s:marks = split(
+function! s:str2list(str)
+    return split(a:str, '\zs')
+endfunction
+
+let s:marks = s:str2list(
 \   "abcdefghijklmnopqrstuvwxyz"
-\ , '\zs'
 \ )
 
-let s:all_marks = split(
+let s:all_marks = s:str2list(
 \   "abcdefghijklmnopqrstuvwxyz"
 \ . "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 \ . "0123456789.'`^<>[]{}()\""
-\ , '\zs'
 \ )
 
 let s:source_mark = {
@@ -25,7 +27,7 @@ function! s:source_mark.gather_candidates(args, context)
   let l:candidates = []
   let l:marks = g:unite_source_mark_showall == 1 ? s:all_marks : s:marks
   let l:curr_buf_name = bufname('#')
-  execute 'buffer #'
+  buffer #
   for l:mark in l:marks
     let l:pos = getpos("'" . l:mark)
     let l:line = l:pos[1]
@@ -52,7 +54,7 @@ function! s:source_mark.gather_candidates(args, context)
     \ }
     call add(l:candidates, l:candidate)
   endfor
-  execute 'buffer #'
+  buffer #
   return l:candidates
 endfunction
 
