@@ -22,7 +22,12 @@ let s:source_mark = {
 \ }
 
 function! s:source_mark.on_init(args, context)
-  let s:mark_info_list = s:collect_mark_info()
+  if empty(a:args)
+    let l:marks = s:marks
+  else
+    let l:marks = s:str2list(a:args[0])
+  endif
+  let s:mark_info_list = s:collect_mark_info(l:marks)
 endfunction
 
 function! s:source_mark.gather_candidates(args, context)
@@ -37,10 +42,10 @@ function! s:source_mark.gather_candidates(args, context)
         \ }')
 endfunction
 
-function! s:collect_mark_info()
+function! s:collect_mark_info(marks)
   let l:curr_buf_name = bufname('%')
   let l:mark_info_list = [] 
-  for l:mark in s:marks
+  for l:mark in a:marks
     let l:mark_info = s:get_mark_info(l:mark, l:curr_buf_name)
     if !empty(l:mark_info)
       call add(l:mark_info_list, l:mark_info)
