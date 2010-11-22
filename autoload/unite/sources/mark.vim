@@ -16,12 +16,14 @@ function! s:str2list(str)
 endfunction
 
 let s:marks = s:str2list(g:unite_source_mark_marks)
+let s:mark_info_list = []
 
 let s:source_mark = {
 \   'name': 'mark',
+\   'hooks': {},
 \ }
 
-function! s:source_mark.on_init(args, context)
+function! s:source_mark.hooks.on_init(args, context)
   if empty(a:args)
     let l:marks = s:marks
   else
