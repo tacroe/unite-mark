@@ -99,7 +99,6 @@ function! s:get_mark_info(mark, curr_buf_name)
     let l:snippet = ''
     let l:bufnr = l:pos[0]
   endif
-  echom "mark : " . a:mark . ":" . l:bufnr
   let l:mark_info = {
         \   'mark': a:mark,
         \   'buf_name': l:buf_name,
